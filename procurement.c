@@ -54,19 +54,23 @@ int main( int argc , char *argv[] )
 
     // missing code goes here
 
+        // Gets the order size , the server's IP address 
+        // (in dotted-decimal format) , and the server's port number
+        // via the command-lie arguments.
+
 
     // Prepare the server's socket address structure
-
-
+    
     // missing code goes here
-
 
 
     // Send the initial request to the Factory Server
     msgBuf  msg1;
 
-
     // missing code goes here
+
+        // Sends a REQUEST_MSG message over UDP to the 
+        // factory server containing the order size.
 
 
     printf("\nPROCUREMENT Sent this message to the FACTORY server: "  );
@@ -80,15 +84,17 @@ int main( int argc , char *argv[] )
 
     // missing code goes here
 
+        // Awaits the ORDR_CONFIRM message over UDP
 
 
     printf("PROCUREMENT received this from the FACTORY server: "  );
     printMsg( & msg2 );  puts("\n");
 
 
-
     // missing code goes here
 
+        // learns how many sub-factories will be actively serving
+        // it (in this PA, it's always 1 sub-factory)
 
     // Monitor all Active Factory Lines & Collect Production Reports
     while ( activeFactories > 0 ) // wait for messages from sub-factories
@@ -96,16 +102,19 @@ int main( int argc , char *argv[] )
 
 
         // missing code goes here
-
-
+            // awaits for a message over UDP        
 
        // Inspect the incoming message
 
 
        // missing code goes here
+            // If it is a PRODUCTION_MSG message, print it and 
+            // update the totals ( iterations and items made) 
+            // for the sub-factory that sent the production message.
 
+            // If it is a  COMPLETION_MSG message, decrement the 
+            // number of active sub-factories
 
-       
     } 
 
     // Print the summary report
@@ -114,20 +123,24 @@ int main( int argc , char *argv[] )
 
 
     // missing code goes here
+        // When there are no more active sub-factories, the client
+        // prints a summary report showing the total items made, 
+        // and iterations performed, by each sub-factory.
 
 
     printf("==============================\n") ;
 
 
     // missing code goes here
+        // The clients also compares the total items made by all 
+        // sub-factories against the order size it 
+        // originally placed.
 
 
     printf( "\n>>> Supervisor Terminated\n");
 
-
-
     // missing code goes here
-
+        // Close and terminate any remaining processes
 
     return 0 ;
 }

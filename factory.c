@@ -67,7 +67,7 @@ void goodbye(int sig)
 /*-------------------------------------------------------*/
 int main( int argc , char *argv[] )
 {
-    char  *myName = "Replace with your Names" ; 
+    char  *myName = "Ethan, Gillian" ; 
     unsigned short port = 50015 ;      /* service port number  */
     int    N = 1 ;                     /* Num threads serving the client */
 
@@ -94,6 +94,10 @@ int main( int argc , char *argv[] )
 
 
     // missing code goes here
+    // ------------------------
+    // awaits for a REQUEST_MSG  message over UDP from a 
+    // client (implemented by the procurement.c program) 
+    // containing the orderSize.
 
 
     int forever = 1;
@@ -103,12 +107,26 @@ int main( int argc , char *argv[] )
 
         // missing code goes here
 
+        // immediately responds to that client with a ORDR_CONFIRM
+        // message over UDPcontaining the number N of sub-factories
+        // that will manufacture the requested order. For this project,
+        // N is always 1. The server initializes the remainsToMake to be
+        // the same as the orderSize.
+
+
         printf("\n\nFACTORY server received: " ) ;
         printMsg( & msg1 );  puts("");
 
-
         // missing code goes here
 
+        // Activates a single sub-factory, implemented as a regular 
+        // function() call in factory.c , providing it with its 
+        // FactoryID ( 1 for this PA ), its capacity (say 50 items), 
+        // and the duration in milliseconds to make that capacity 
+        // (or part of) of items.
+
+        // The factory server should capture any signals meant to INTerrupt
+        // or TERMinate the server in the proper way.
 
         printf("\n\nFACTORY sent this Order Confirmation to the client " );
         printMsg(  & msg1 );  puts("");
@@ -136,21 +154,40 @@ void subFactory( int factoryID , int myCapacity , int myDuration )
 
         // missing code goes here
 
+        // The sub-factory,  as long as ( remainsToMake  > 0  ) , 
+        // it repeatedly:
+            // -Decides how many to make as the lesser of capacity 
+            // and remainsToMake
+            // -Decrements remainsToMake  by the number of items this 
+            // sub-factory will make,
+            // -Sleeps for duration milliseconds, to emulate the actual 
+            // manufacturing of the items,
+
 
 
         // Send a Production Message to Supervisor
 
-
+            // -After waking up, the sub-factory sends a  PRODUCTION_MSG 
+            // message over UDP containing its FactoryID  , its capacity, 
+            // the actual number of items it has just made in this 
+            // iteration, and the duration in milliseconds it took to make
+            // that many items.
+    
         // missing code goes here
-
 
     }
 
     // Send a Completion Message to Supervisor
-
+    
+    // Once there are no more items to make, the sub-factory sends 
+    // a COMPLETION_MSG message over UDP to the client containing 
+    // its FactoryID.
 
     // missing code goes here
 
+    // The sub-factory keeps track of how many iterations it has
+    // performed, and the total number of items it has has actually
+    // made. It prints this information to the screen.    
 
 
     snprintf( strBuff , MAXSTR , ">>> Factory # %-3d: Terminating after making total of %-5d parts in %-4d iterations\n" 
@@ -158,4 +195,3 @@ void subFactory( int factoryID , int myCapacity , int myDuration )
     factLog( strBuff ) ;
     
 }
-

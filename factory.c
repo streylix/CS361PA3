@@ -66,14 +66,21 @@ void goodbye(int sig)
 /*-------------------------------------------------------*/
 int main( int argc , char *argv[] )
 {
+    struct sigaction sa;
+
+    // Zero out the sigaction struct
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sa.sa_handler = goodbye;
+
     char  *myName = "Ethan Pae, Gillian Kelly" ; 
     unsigned short port = 50015 ;      /* service port number  */
     int    N = 1 ;                     /* Num threads serving the client */
 
-    printf("\nThis is the FACTORY server developed by %s\n\n" , myName ) ;
+    printf("\nThis is the FACTORY server developed by %s (pid: %d)\n\n" , myName, getpid() ) ;
 
-    signal(SIGINT, goodbye);
-    signal(SIGTERM, goodbye);
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
 
 	switch (argc) 
 	{
@@ -199,10 +206,10 @@ void subFactory( int factoryID , int myCapacity , int myDuration )
     msg.facID = factoryID;           // a COMPLETION_MSG message over UDP to the client containing
                                      // its FactoryID. 
 
-    sendmsg(sd, &msg, sizeof(msg));
-
     snprintf( strBuff , MAXSTR , ">>> Factory # %-3d: Terminating after making total of %-5d parts in %-4d iterations\n" 
           , factoryID, partsImade, myIterations);
     factLog( strBuff ) ;
+
+    sendmsg(sd, &msg, sizeof(msg));
     
 }

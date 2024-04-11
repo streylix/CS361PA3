@@ -87,11 +87,12 @@ int main( int argc , char *argv[] )
     }
 
     printf("PROCUREMENT received this from the FACTORY server: "  );
-    printMsg( & msg2 );  puts("\n");
+    printMsg( &msg2 );  puts("\n");
 
     // learns how many sub-factories will be actively serving it (which will be 1)
     // Monitor all Active Factory Lines & Collect Production Reports
     while (activeFactories > 0){    // wait for messages from sub-factories
+        printf("In here stuck\n");
         recvfrom(sockfd, &msg2, sizeof(msg2), 0, (SA *)&servaddr, &len); 
 
         // awaits for a message over UDP
